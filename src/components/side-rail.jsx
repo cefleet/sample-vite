@@ -2,9 +2,8 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import TrackList from "./track-list";
 
-function SideRail({...data }) {
-
-  console.log('Rendering Side Rail')
+function SideRail({ name, tracks }) {
+  console.log("Rendering Side Rail");
 
   return (
     <div>
@@ -25,12 +24,12 @@ function SideRail({...data }) {
         <h3>data</h3>
         <p>
           <strong style={{ display: "block" }}>Name</strong>
-          {data.name}
+          {name}
         </p>
 
         <TrackList>
-          {data.tracks ? (
-            data.tracks.map((track,idx) => <Track {...track} key={idx} />)
+          {tracks ? (
+            tracks.map((track, idx) => <Track {...track} key={idx} />)
           ) : (
             <div>No tracks</div>
           )}

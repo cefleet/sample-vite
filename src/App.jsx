@@ -23,12 +23,16 @@ function App() {
   });
 
   const [saved, setSaved] = useState(false);
+  const [validationState, setValidationState] = useState({});
 
-  function saveData(data) {
-    setCreateReleaseData({ ...createReleaseData, ...data });
+  //do an imutablity thing]
+  function updateReleaseState(data) {
+    //validate state
+    setCreateReleaseData((currentState) => ({ ...currentState, ...data }));
     setSaved(false);
   }
 
+  //AN API call
   function saveToDatabase() {
     console.log("Gonna Patch to the DB");
     console.log(createReleaseData);
@@ -36,6 +40,13 @@ function App() {
     setSaved(true);
   }
 
+  function getfieldsForSideRail() {
+    return {
+      ...getFields("sideRail"),
+      valdiation: validationState.leftRail, //not implemented yet
+      saved: saved,
+    };
+  }
   function getFields(key) {
     const fields = neededFields[key];
     return Object.entries(createReleaseData).reduce((data, [key, value]) => {
@@ -50,7 +61,7 @@ function App() {
       <div style={{ display: "flex" }}>
         <BrowserRouter>
           <div style={{ width: "300px" }}>
-            <SideRail {...getFields("sideRail")} />
+            <SideRail {...getfieldsForSideRail()} />
             <SaveStatusAndButton
               saveToDatabase={saveToDatabase}
               saved={saved}
@@ -64,7 +75,7 @@ function App() {
                   <MainBody title="General">
                     <GeneralInfo
                       {...getFields("general")}
-                      saveData={saveData}
+                      updateReleaseState={updateReleaseState}
                     />
                   </MainBody>
                 }
@@ -73,7 +84,10 @@ function App() {
                 path="/extra"
                 element={
                   <MainBody title="Extra">
-                    <Extra {...getFields("extra")} saveData={saveData} />
+                    <Extra
+                      {...getFields("extra")}
+                      saveData={updateReleaseState}
+                    />
                   </MainBody>
                 }
               />
@@ -81,7 +95,10 @@ function App() {
                 path="/tracks"
                 element={
                   <MainBody title="Tracks">
-                    <Tracks {...getFields("tracks")} saveData={saveData} />
+                    <Tracks
+                      {...getFields("tracks")}
+                      saveData={updateReleaseState}
+                    />
                   </MainBody>
                 }
               />
